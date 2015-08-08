@@ -68,7 +68,8 @@ gulp.task('coveralls', ['test'], function () {
 gulp.task('babel', function () {
     return gulp.src('lib/**/*.js')
         .pipe(babel())
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist'))
+        .on('error', console.log);
 });
 
 gulp.task('prepublish', ['nsp', 'babel']);
