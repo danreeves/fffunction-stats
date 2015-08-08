@@ -1,11 +1,11 @@
 {
-    preset: "airbnb",
-    validateIndentation: 4,
-    requireSemicolons: true,
-    disallowSpacesInFunctionExpression: null,
-    disallowSpacesInAnonymousFunctionExpression: null,
-    requireSpacesInAnonymousFunctionExpression: {
-        beforeOpeningRoundBrace: true,
-        beforeOpeningCurlyBrace: true
+    "preset": "airbnb",
+    "validateIndentation": 4,
+    "requireSemicolons": true,
+    "disallowSpacesInFunctionExpression": null,
+    "disallowSpacesInAnonymousFunctionExpression": null,
+    "requireSpacesInAnonymousFunctionExpression": {
+        "beforeOpeningRoundBrace": true,
+        "beforeOpeningCurlyBrace": true
     }
 }
