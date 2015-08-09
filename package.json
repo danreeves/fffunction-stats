@@ -27,6 +27,7 @@
     "gulp-nsp": "*",
     "gulp-plumber": "*",
     "jshint-stylish": "*",
+    "node-inspector": "^0.12.2",
     "nodemon": "^1.4.0"
   },
   "scripts": {
@@ -37,6 +38,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "babel": "^5.8.21",
+    "es6-promise": "^2.3.0",
     "express": "^4.13.3",
     "redis": "^0.12.1",
     "request": "^2.60.0"

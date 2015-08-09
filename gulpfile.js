@@ -74,6 +74,6 @@ gulp.task('babel', function () {
 
 gulp.task('prepublish', ['nsp', 'babel']);
 gulp.task('default', ['static', 'test', 'coveralls']);
-gulp.task('watch', function watch () {
+gulp.task('watch', ['babel'], function watch () {
     gulp.watch('lib/*', ['babel']);
 });
