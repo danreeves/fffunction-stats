@@ -42,12 +42,12 @@ export default {
     },
 
     historyOf (channel) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
             const history = [];
             const getHistory = function getHistory (latest) {
-                if (latest == undefined) latest = Date.now() / 1000;
+                if (latest === undefined) latest = Date.now() / 1000;
                 const reqUrl = makeURL('channels.history', { token, channel, latest });
-                request(reqUrl, function (err, res, body) {
+                request(reqUrl, (err, res, body) => {
                     if (err) reject(err);
                     const data = JSON.parse(body);
                     history.push(...data.messages);

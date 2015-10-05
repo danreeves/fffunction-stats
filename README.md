@@ -1,5 +1,4 @@
-# slacker
-> Slack scraper
+# fffunction stats
 
 ## License
 

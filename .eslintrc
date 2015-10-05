@@ -1,8 +1,12 @@
 {
     "extends": "airbnb",
     "rules": {
-        "indent": [2, 4],
+        "semi": [1, "always"],
+        "indent": [1, 4],
         "space-before-function-paren": [1, {"anonymous": "always", "named": "always"}],
-        "no-console": 0, lol
+        "no-console": 0,
+        "padded-blocks": 0,
+        "no-empty": 0,
+        "no-param-reassign": 0,
     }
 }

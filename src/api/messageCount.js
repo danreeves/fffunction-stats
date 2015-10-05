@@ -1,5 +1,4 @@
-import 'babel/polyfill';
-import slack from './slack.js';
+import slack from '../lib/slack.js';
 
 const channels = slack.getChannels();
 let channelArray = [];
@@ -15,18 +14,20 @@ const countUserMessages = function countUserMessages (a, b) {
     else a[b.user] = 1;
     return a;
 };
-const nameMessageCount = function nameMessageCount (a, b) {
-    const data = JSON.parse(b.body);
+const userMessageCount = function userMessageCount (response) {
+    const data = JSON.parse(response.body);
+    const user = {};
     if ('user' in data) {
         if (String(data.user.profile.email).includes('@fffunction.co')) {
-            a[data.user.profile.email] = messageCount[data.user.id];
+            user.email = data.user.profile.email;
+            user.messages = messageCount[data.user.id];
         }
     }
-    return a;
-}
+    return user;
+};
 
 export default function getSlackMessageCount () {
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
         channels.then(function gotChannels (data) {
             channelArray = JSON.parse(data.body).channels;
@@ -39,7 +40,7 @@ export default function getSlackMessageCount () {
             return Promise.all(userIDs.map(id => slack.userInfo(id)));
         })
         .then(function gotUsers (data) {
-            messageCount = data.reduce(nameMessageCount, {});
+            messageCount = data.map(userMessageCount).filter((v) => Object.keys(v).length);
             resolve(messageCount);
         })
         .catch(reject);
