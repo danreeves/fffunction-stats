@@ -28,46 +28,37 @@ var mapStatus = function mapStatus(members) {
 function slackStatus() {
     var _this = this;
 
-    return new Promise(function callee$1$0(resolve, reject) {
+    return new Promise(function callee$1$0(resolve) {
         var usersResponse, members, memberStatus, mappedUsers;
         return regeneratorRuntime.async(function callee$1$0$(context$2$0) {
             while (1) switch (context$2$0.prev = context$2$0.next) {
                 case 0:
-                    context$2$0.prev = 0;
-                    context$2$0.next = 3;
+                    context$2$0.next = 2;
                     return regeneratorRuntime.awrap(_libSlackJs2['default'].getUsers());
 
-                case 3:
+                case 2:
                     usersResponse = context$2$0.sent;
                     members = JSON.parse(usersResponse.body).members;
-                    context$2$0.next = 7;
+                    context$2$0.next = 6;
                     return regeneratorRuntime.awrap(Promise.all(members.map(userStatus)));
 
-                case 7:
+                case 6:
                     memberStatus = context$2$0.sent;
-                    context$2$0.next = 10;
+                    context$2$0.next = 9;
                     return regeneratorRuntime.awrap(memberStatus.map(mapStatus(members)).filter(function (v) {
                         return v !== undefined;
                     }));
 
-                case 10:
+                case 9:
                     mappedUsers = context$2$0.sent;
 
                     resolve(mappedUsers);
-                    context$2$0.next = 17;
-                    break;
 
-                case 14:
-                    context$2$0.prev = 14;
-                    context$2$0.t0 = context$2$0['catch'](0);
-
-                    reject(context$2$0.t0);
-
-                case 17:
+                case 11:
                 case 'end':
                     return context$2$0.stop();
             }
-        }, null, _this, [[0, 14]]);
+        }, null, _this);
     });
 }
 
