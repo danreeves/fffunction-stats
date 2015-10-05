@@ -16,13 +16,15 @@ const mapStatus = function mapStatus (members) {
 };
 
 export default function slackStatus () {
-    return new Promise(async (resolve) => {
-
-        const usersResponse = await slack.getUsers();
-        const members = JSON.parse(usersResponse.body).members;
-        const memberStatus = await Promise.all(members.map(userStatus));
-        const mappedUsers = await memberStatus.map(mapStatus(members)).filter(v => v !== undefined);
-        resolve(mappedUsers);
-
+    return new Promise(async (resolve, reject) => {
+        try {
+            const usersResponse = await slack.getUsers();
+            const members = JSON.parse(usersResponse.body).members;
+            const memberStatus = await Promise.all(members.map(userStatus));
+            const mappedUsers = await memberStatus.map(mapStatus(members)).filter(v => v !== undefined);
+            resolve(mappedUsers);
+        } catch (e) {
+            reject(e);
+        }
     });
 }
