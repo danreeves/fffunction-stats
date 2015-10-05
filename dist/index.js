@@ -25,7 +25,7 @@ app.get('/api/slack_messages', function (req, res) {
 app.get('/api/slack_status', function (req, res) {
     (0, _apiSlackStatusJs2['default'])().then(function (d) {
         res.json(d);
-    })['catch'](console.log);
+    });
 });
 
 app.listen(80);

@@ -13,7 +13,7 @@ app.get('/api/slack_messages', (req, res) => {
 app.get('/api/slack_status', (req, res) => {
     slackStatus().then((d) => {
         res.json(d);
-    }).catch(console.log);
+    });
 });
 
 app.listen(80);
