@@ -10,10 +10,6 @@ var _libSlackJs = require('../lib/slack.js');
 
 var _libSlackJs2 = _interopRequireDefault(_libSlackJs);
 
-var getUserStatus = function getUserStatus(user) {
-    return _libSlackJs2['default'].userStatus(user.id);
-};
-
 var emailToStatus = function emailToStatus(members) {
     return function (v, i) {
         if (String(members[i].profile.email).includes('@fffunction.co') && members[i].deleted !== true) {
@@ -37,7 +33,9 @@ exports['default'] = function slackStatus() {
                 usersResponse = context$1$0.sent;
                 allMembers = JSON.parse(usersResponse.body).members;
                 context$1$0.next = 6;
-                return regeneratorRuntime.awrap(Promise.all(allMembers.map(getUserStatus)));
+                return regeneratorRuntime.awrap(Promise.all(allMembers.map(function (user) {
+                    return _libSlackJs2['default'].userStatus(user.id);
+                })));
 
             case 6:
                 memberStatus = context$1$0.sent;

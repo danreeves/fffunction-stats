@@ -1,9 +1,5 @@
 import slack from '../lib/slack.js';
 
-const getUserStatus = function getUserStatus (user) {
-    return slack.userStatus(user.id);
-};
-
 const emailToStatus = function emailToStatus (members) {
     return (v, i) => {
         if (String(members[i].profile.email).includes('@fffunction.co') &&
@@ -19,6 +15,6 @@ const emailToStatus = function emailToStatus (members) {
 export default async function slackStatus () {
     const usersResponse = await slack.getUsers();
     const allMembers = JSON.parse(usersResponse.body).members;
-    const memberStatus = await Promise.all(allMembers.map(getUserStatus));
+    const memberStatus = await Promise.all(allMembers.map((user) => slack.userStatus(user.id)));
     return await memberStatus.map(emailToStatus(allMembers)).filter(v => v !== undefined);
 }
