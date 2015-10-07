@@ -1,9 +1,10 @@
 import slack from '../lib/slack.js';
 
-const userStatus = function userStatus (user) {
+const getUserStatus = function getUserStatus (user) {
     return slack.userStatus(user.id);
 };
-const mapStatus = function mapStatus (members) {
+
+const emailToStatus = function emailToStatus (members) {
     return (v, i) => {
         if (String(members[i].profile.email).includes('@fffunction.co') &&
             members[i].deleted !== true) {
@@ -15,12 +16,9 @@ const mapStatus = function mapStatus (members) {
     };
 };
 
-export default function slackStatus () {
-    return new Promise(async (resolve) => {
-        const usersResponse = await slack.getUsers();
-        const members = JSON.parse(usersResponse.body).members;
-        const memberStatus = await Promise.all(members.map(userStatus));
-        const mappedUsers = await memberStatus.map(mapStatus(members)).filter(v => v !== undefined);
-        resolve(mappedUsers);
-    });
+export default async function slackStatus () {
+    const usersResponse = await slack.getUsers();
+    const allMembers = JSON.parse(usersResponse.body).members;
+    const memberStatus = await Promise.all(allMembers.map(getUserStatus));
+    return await memberStatus.map(emailToStatus(allMembers)).filter(v => v !== undefined);
 }
