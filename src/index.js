@@ -24,4 +24,3 @@ if (env === 'production') {
 addPaths(paths, '/');
 
 app.listen(80);
-
