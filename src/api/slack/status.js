@@ -1,4 +1,4 @@
-import slack from '../lib/slack.js';
+import slack from '../../lib/slack.js';
 
 const emailToStatus = function emailToStatus (members) {
     return (v, i) => {
@@ -12,7 +12,7 @@ const emailToStatus = function emailToStatus (members) {
     };
 };
 
-export default async function slackStatus () {
+export default async function status () {
     const usersResponse = await slack.getUsers();
     const allMembers = JSON.parse(usersResponse.body).members;
     const memberStatus = await Promise.all(allMembers.map((user) => slack.userStatus(user.id)));

@@ -1,4 +1,4 @@
-import slack from '../lib/slack.js';
+import slack from '../../lib/slack.js';
 
 const countUserMessages = function countUserMessages (a, b) {
     if (a[b.user]) a[b.user]++;

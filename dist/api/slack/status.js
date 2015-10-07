@@ -6,7 +6,7 @@ Object.defineProperty(exports, '__esModule', {
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _libSlackJs = require('../lib/slack.js');
+var _libSlackJs = require('../../lib/slack.js');
 
 var _libSlackJs2 = _interopRequireDefault(_libSlackJs);
 
@@ -21,9 +21,9 @@ var emailToStatus = function emailToStatus(members) {
     };
 };
 
-exports['default'] = function slackStatus() {
+exports['default'] = function status() {
     var usersResponse, allMembers, memberStatus;
-    return regeneratorRuntime.async(function slackStatus$(context$1$0) {
+    return regeneratorRuntime.async(function status$(context$1$0) {
         while (1) switch (context$1$0.prev = context$1$0.next) {
             case 0:
                 context$1$0.next = 2;

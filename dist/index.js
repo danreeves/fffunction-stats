@@ -1,61 +1,45 @@
 'use strict';
 
-var _this = this;
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
 
-var _apiMessageCountJs = require('./api/messageCount.js');
+var _cacher = require('cacher');
 
-var _apiMessageCountJs2 = _interopRequireDefault(_apiMessageCountJs);
+var _cacher2 = _interopRequireDefault(_cacher);
 
-var _apiSlackStatusJs = require('./api/slackStatus.js');
+var _libAddPathsJs = require('./lib/addPaths.js');
+
+var _libAddPathsJs2 = _interopRequireDefault(_libAddPathsJs);
+
+var _apiSlackMessagesJs = require('./api/slack/messages.js');
+
+var _apiSlackMessagesJs2 = _interopRequireDefault(_apiSlackMessagesJs);
+
+var _apiSlackStatusJs = require('./api/slack/status.js');
 
 var _apiSlackStatusJs2 = _interopRequireDefault(_apiSlackStatusJs);
 
+var env = process.env.NODE_ENV || 'development';
+
 var app = (0, _express2['default'])();
+var cacher = new _cacher2['default']();
+var addPaths = (0, _libAddPathsJs2['default'])(app);
 
-app.get('/api/slack_messages', function callee$0$0(req, res) {
-    var data;
-    return regeneratorRuntime.async(function callee$0$0$(context$1$0) {
-        while (1) switch (context$1$0.prev = context$1$0.next) {
-            case 0:
-                context$1$0.next = 2;
-                return regeneratorRuntime.awrap((0, _apiMessageCountJs2['default'])());
-
-            case 2:
-                data = context$1$0.sent;
-
-                res.json(data);
-
-            case 4:
-            case 'end':
-                return context$1$0.stop();
+var paths = {
+    api: {
+        slack: {
+            messages: _apiSlackMessagesJs2['default'],
+            status: _apiSlackStatusJs2['default']
         }
-    }, null, _this);
-});
+    }
+};
 
-app.get('/api/slack_status', function callee$0$0(req, res) {
-    var data;
-    return regeneratorRuntime.async(function callee$0$0$(context$1$0) {
-        while (1) switch (context$1$0.prev = context$1$0.next) {
-            case 0:
-                context$1$0.next = 2;
-                return regeneratorRuntime.awrap((0, _apiSlackStatusJs2['default'])());
-
-            case 2:
-                data = context$1$0.sent;
-
-                res.json(data);
-
-            case 4:
-            case 'end':
-                return context$1$0.stop();
-        }
-    }, null, _this);
-});
+if (env === 'production') {
+    app.use(cacher.cache('days', 1));
+}
+addPaths(paths, '/');
 
 app.listen(80);

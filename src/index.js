@@ -1,17 +1,27 @@
 import express from 'express';
-import messageCount from './api/messageCount.js';
-import slackStatus from './api/slackStatus.js';
+import Cacher from 'cacher';
+import addPathsTo from './lib/addPaths.js';
+import slackMessages from './api/slack/messages.js';
+import slackStatus from './api/slack/status.js';
+const env = process.env.NODE_ENV || 'development';
 
 const app = express();
+const cacher = new Cacher();
+const addPaths = addPathsTo(app);
 
-app.get('/api/slack_messages', async (req, res) => {
-    const data = await messageCount();
-    res.json(data);
-});
+const paths = {
+    api: {
+        slack: {
+            messages: slackMessages,
+            status: slackStatus,
+        },
+    },
+};
 
-app.get('/api/slack_status', async (req, res) => {
-    const data = await slackStatus();
-    res.json(data);
-});
+if (env === 'production') {
+    app.use(cacher.cache('days', 1));
+}
+addPaths(paths, '/');
 
 app.listen(80);
+
