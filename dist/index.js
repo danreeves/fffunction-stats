@@ -22,6 +22,10 @@ var _apiSlackStatusJs = require('./api/slack/status.js');
 
 var _apiSlackStatusJs2 = _interopRequireDefault(_apiSlackStatusJs);
 
+var _apiBitbucketCommitsJs = require('./api/bitbucket/commits.js');
+
+var _apiBitbucketCommitsJs2 = _interopRequireDefault(_apiBitbucketCommitsJs);
+
 var env = process.env.NODE_ENV || 'development';
 
 var app = (0, _express2['default'])();
@@ -33,6 +37,9 @@ var paths = {
         slack: {
             messages: _apiSlackMessagesJs2['default'],
             status: _apiSlackStatusJs2['default']
+        },
+        bitbucket: {
+            commits: _apiBitbucketCommitsJs2['default']
         }
     }
 };

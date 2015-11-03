@@ -3,6 +3,7 @@ import Cacher from 'cacher';
 import addPathsTo from './lib/addPaths.js';
 import slackMessages from './api/slack/messages.js';
 import slackStatus from './api/slack/status.js';
+import bbCommits from './api/bitbucket/commits.js';
 const env = process.env.NODE_ENV || 'development';
 
 const app = express();
@@ -15,6 +16,9 @@ const paths = {
             messages: slackMessages,
             status: slackStatus,
         },
+        bitbucket: {
+            commits: bbCommits,
+        }
     },
 };
 

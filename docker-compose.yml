@@ -6,8 +6,4 @@ web:
         - "80:80"
     env_file: .env
     command: npm run dev
-    links:
-        - "db:redis"
     env_file: .env_config
-db:
-    image: redis
