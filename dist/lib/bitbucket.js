@@ -24,10 +24,12 @@ var _ohauth2 = _interopRequireDefault(_ohauth);
 
 var consumerKey = process.env.BITBUCKET_CONSUMER_KEY;
 var consumerSecret = process.env.BITBUCKET_CONSUMER_SECRET;
+
 var auth = _ohauth2['default'].headerGenerator({
     consumer_key: consumerKey,
     consumer_secret: consumerSecret
 });
+
 var bitbucketURL = {
     protocol: 'https',
     slashes: true,
@@ -45,9 +47,13 @@ function objToParam() {
     return params;
 }
 
-function prequest() {
-    var opts = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
+function prequest(requestURL, authHeader) {
+    var opts = {
+        url: requestURL,
+        headers: {
+            'Authorization': authHeader
+        }
+    };
     return new Promise(function requestPromise(resolve, reject) {
         (0, _request2['default'])(opts, function requestCb(err, response, body) {
             if (err) reject(err);
@@ -70,12 +76,18 @@ exports['default'] = {
     getCommitsOf: function getCommitsOf(repo) {
         var requestURL = makeURL('/api/2.0/repositories/fffunction/' + repo + '/commits/HEAD');
         var header = auth('GET', requestURL);
-        return prequest({
-            url: requestURL,
-            headers: {
-                'Authorization': header
-            }
-        });
+        return prequest(requestURL, header);
+    },
+
+    getRepos: function getRepos() {
+        var page = arguments.length <= 0 || arguments[0] === undefined ? 1 : arguments[0];
+
+        var query = {
+            page: page
+        };
+        var requestURL = makeURL('/api/2.0/repositories/fffunction', query);
+        var header = auth('GET', requestURL, query);
+        return prequest(requestURL, header);
     }
 
 };

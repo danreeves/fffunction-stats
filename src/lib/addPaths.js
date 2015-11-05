@@ -8,9 +8,9 @@ export default function addPathsTo (app) {
             });
         } else {
             app.get(url, async (req, res) => {
+                console.log('Request  ->', url);
                 const data = await obj();
                 res.json(data);
-                console.log('Request  ->', url);
                 console.log('Response ->', data);
             });
             console.log('Route added:', url);

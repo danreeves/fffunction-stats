@@ -25,14 +25,14 @@ function addPathsTo(app) {
                 return regeneratorRuntime.async(function callee$2$0$(context$3$0) {
                     while (1) switch (context$3$0.prev = context$3$0.next) {
                         case 0:
-                            context$3$0.next = 2;
+                            console.log('Request  ->', url);
+                            context$3$0.next = 3;
                             return regeneratorRuntime.awrap(obj());
 
-                        case 2:
+                        case 3:
                             data = context$3$0.sent;
 
                             res.json(data);
-                            console.log('Request  ->', url);
                             console.log('Response ->', data);
 
                         case 6:

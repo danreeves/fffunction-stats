@@ -5,10 +5,12 @@ import oh from 'ohauth';
 
 const consumerKey = process.env.BITBUCKET_CONSUMER_KEY;
 const consumerSecret = process.env.BITBUCKET_CONSUMER_SECRET;
+
 const auth = oh.headerGenerator({
     consumer_key: consumerKey,
     consumer_secret: consumerSecret,
 });
+
 const bitbucketURL = {
     protocol: 'https',
     slashes: true,
@@ -24,7 +26,13 @@ function objToParam (obj = {}) {
     return params;
 }
 
-function prequest (opts = {}) {
+function prequest (requestURL, authHeader) {
+    const opts = {
+        url: requestURL,
+        headers: {
+            'Authorization': authHeader,
+        },
+    };
     return new Promise(function requestPromise (resolve, reject) {
         request(opts, function requestCb (err, response, body) {
             if (err) reject(err);
@@ -45,13 +53,16 @@ export default {
     getCommitsOf (repo) {
         const requestURL = makeURL(`/api/2.0/repositories/fffunction/${repo}/commits/HEAD`);
         const header = auth('GET', requestURL);
-        return prequest({
-            url: requestURL,
-            headers: {
-                'Authorization': header,
-            },
-        });
+        return prequest(requestURL, header);
+    },
 
+    getRepos (page = 1) {
+        const query = {
+            page,
+        };
+        const requestURL = makeURL(`/api/2.0/repositories/fffunction`, query);
+        const header = auth('GET', requestURL, query);
+        return prequest(requestURL, header);
     },
 
 };

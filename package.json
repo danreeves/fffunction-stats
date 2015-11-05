@@ -16,7 +16,7 @@
     "nodemon": "^1.4.0"
   },
   "scripts": {
-    "dev": "gulp watch & nodemon dist/index.js",
+    "dev": "gulp watch & nodemon --watch dist dist/index.js",
     "start": "node --watch dist dist/index.js"
   },
   "license": "MIT",
