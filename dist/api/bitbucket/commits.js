@@ -10,6 +10,8 @@ var _libBitbucketJs = require('../../lib/bitbucket.js');
 
 var _libBitbucketJs2 = _interopRequireDefault(_libBitbucketJs);
 
+var fffUsernames = require('../../data/bitbucket.json');
+
 function getAllRepos() {
     var repos, getRepos;
     return regeneratorRuntime.async(function getAllRepos$(context$1$0) {
@@ -61,8 +63,17 @@ function getAllRepos() {
     }, null, this);
 }
 
+function countUserCommits(a, b) {
+    try {
+        if (b.author.user.username in a) a[b.author.user.username]++;else a[b.author.user.username] = 1;
+    } catch (e) {
+        // key error if bitbucket user doesn't exist
+    }
+    return a;
+}
+
 exports['default'] = function getBitbucketCommitCount() {
-    var repos, allCommitResponses, allCommits;
+    var repos, allCommitResponses, allCommits, commitCount;
     return regeneratorRuntime.async(function getBitbucketCommitCount$(context$1$0) {
         while (1) switch (context$1$0.prev = context$1$0.next) {
             case 0:
@@ -85,10 +96,15 @@ exports['default'] = function getBitbucketCommitCount() {
                     }
                     return a;
                 }, []);
+                commitCount = allCommits.reduce(countUserCommits, {});
+                return context$1$0.abrupt('return', Object.keys(commitCount).map(function (user) {
+                    return {
+                        username: user,
+                        commits: commitCount[user]
+                    };
+                }));
 
-                console.log(allCommits.length);
-
-            case 8:
+            case 9:
             case 'end':
                 return context$1$0.stop();
         }

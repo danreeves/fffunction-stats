@@ -1,5 +1,5 @@
 import bitbucket from '../../lib/bitbucket.js';
-
+const fffUsernames = require('../../data/bitbucket.json');
 
 async function getAllRepos () {
     let repos = [];
@@ -16,6 +16,17 @@ async function getAllRepos () {
 
 }
 
+function countUserCommits (a, b) {
+    try {
+        if (b.author.user.username in a) a[b.author.user.username]++;
+        else a[b.author.user.username] = 1;
+    } catch (e) {
+        // key error if bitbucket user doesn't exist
+    }
+    return a;
+}
+
+
 export default async function getBitbucketCommitCount () {
     const repos = await getAllRepos();
     const allCommitResponses = await Promise.all(repos.map(repo => bitbucket.getCommitsOf(repo)));
@@ -26,5 +37,10 @@ export default async function getBitbucketCommitCount () {
         }
         return a;
     }, []);
-    console.log(allCommits.length)
+    const commitCount = allCommits.reduce(countUserCommits, {});
+    return Object.keys(commitCount).map(user => ({
+        username: user,
+        commits: commitCount[user],
+    }));
+
 }
