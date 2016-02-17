@@ -1,10 +1,19 @@
 import bitbucket from '../../lib/bitbucket.js';
-const fffUsernames = require('../../data/bitbucket.json');
+const fffunctioneers = [
+    'petercolesdc',
+    'bencoleman',
+    'urlsangel',
+    'bouncingdan',
+    'bendarby',
+    'danreeves',
+    'michellegale',
+];
 
 async function getAllRepos () {
     let repos = [];
 
     async function getRepos (page = 1) {
+        console.log(page)
         const repoResponse = await bitbucket.getRepos(page);
         const body = JSON.parse(repoResponse.body);
         repos = repos.concat(body.values.map(repo => repo.full_name.replace(/.*\//, '')));
@@ -12,6 +21,7 @@ async function getAllRepos () {
     }
 
     await getRepos(1);
+    console.log(repos)
     return repos;
 
 }
@@ -38,9 +48,11 @@ export default async function getBitbucketCommitCount () {
         return a;
     }, []);
     const commitCount = allCommits.reduce(countUserCommits, {});
-    return Object.keys(commitCount).map(user => ({
-        username: user,
-        commits: commitCount[user],
-    }));
+    return Object.keys(commitCount)
+        .filter(user => fffunctioneers.includes(user))
+        .map(user => ({
+            username: user,
+            commits: commitCount[user],
+        }));
 
 }

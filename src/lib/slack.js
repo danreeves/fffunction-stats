@@ -1,6 +1,12 @@
 import 'babel/polyfill';
 import request from 'request';
+import cachedRequest from 'cached-request';
 import url from 'url';
+import path from 'path';
+
+const req = cachedRequest(request);
+req.setCacheDirectory(path.join(process.env.APP_ROOT, 'cache'));
+req.set('ttl', 60000); // 1 minute in ms
 
 const token = process.env.SLACK_API_KEY;
 const slackURL = {
@@ -20,7 +26,7 @@ function objToParam (obj) {
 
 function prequest (getUrl) {
     return new Promise(function requestPromise (resolve, reject) {
-        request(getUrl, function requestCb (err, response, body) {
+        req(getUrl, function requestCb (err, response, body) {
             if (err) reject(err);
             resolve({ response, body });
         });

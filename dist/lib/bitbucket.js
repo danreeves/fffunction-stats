@@ -14,6 +14,10 @@ var _request = require('request');
 
 var _request2 = _interopRequireDefault(_request);
 
+var _cachedRequest = require('cached-request');
+
+var _cachedRequest2 = _interopRequireDefault(_cachedRequest);
+
 var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
@@ -21,6 +25,14 @@ var _url2 = _interopRequireDefault(_url);
 var _ohauth = require('ohauth');
 
 var _ohauth2 = _interopRequireDefault(_ohauth);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var req = (0, _cachedRequest2['default'])(_request2['default']);
+req.setCacheDirectory(_path2['default'].join(process.env.APP_ROOT, 'cache'));
+req.set('ttl', 4500000); // 1 hour 15 minutes in ms
 
 var consumerKey = process.env.BITBUCKET_CONSUMER_KEY;
 var consumerSecret = process.env.BITBUCKET_CONSUMER_SECRET;
@@ -33,7 +45,7 @@ var auth = _ohauth2['default'].headerGenerator({
 var bitbucketURL = {
     protocol: 'https',
     slashes: true,
-    host: 'bitbucket.org'
+    host: 'api.bitbucket.org'
 };
 
 function objToParam() {
@@ -55,18 +67,19 @@ function prequest(requestURL, authHeader) {
         }
     };
     return new Promise(function requestPromise(resolve, reject) {
-        (0, _request2['default'])(opts, function requestCb(err, response, body) {
+        req(opts, function requestCb(err, response, body) {
             if (err) reject(err);
+            console.log(requestURL + ' returned ' + response.statusCode);
             resolve({ response: response, body: body });
         });
     });
 }
 
-function makeURL(path) {
+function makeURL(pathname) {
     var query = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
     var newURL = _extends({}, bitbucketURL);
-    newURL.pathname = path;
+    newURL.pathname = pathname;
     newURL.search = objToParam(query);
     return _url2['default'].format(newURL);
 }
@@ -74,7 +87,8 @@ function makeURL(path) {
 exports['default'] = {
 
     getCommitsOf: function getCommitsOf(repo) {
-        var requestURL = makeURL('/api/2.0/repositories/fffunction/' + repo + '/commits/HEAD');
+        console.log('getting commits for ' + repo);
+        var requestURL = makeURL('/2.0/repositories/fffunction/' + repo + '/commits/');
         var header = auth('GET', requestURL);
         return prequest(requestURL, header);
     },
@@ -85,7 +99,7 @@ exports['default'] = {
         var query = {
             page: page
         };
-        var requestURL = makeURL('/api/2.0/repositories/fffunction', query);
+        var requestURL = makeURL('/2.0/repositories/fffunction', query);
         var header = auth('GET', requestURL, query);
         return prequest(requestURL, header);
     }

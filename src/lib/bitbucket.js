@@ -1,7 +1,13 @@
 import 'babel/polyfill';
 import request from 'request';
+import cachedRequest from 'cached-request';
 import url from 'url';
 import oh from 'ohauth';
+import path from 'path';
+
+const req = cachedRequest(request);
+req.setCacheDirectory(path.join(process.env.APP_ROOT, 'cache'));
+req.set('ttl', 4500000); // 1 hour 15 minutes in ms
 
 const consumerKey = process.env.BITBUCKET_CONSUMER_KEY;
 const consumerSecret = process.env.BITBUCKET_CONSUMER_SECRET;
@@ -14,7 +20,7 @@ const auth = oh.headerGenerator({
 const bitbucketURL = {
     protocol: 'https',
     slashes: true,
-    host: 'bitbucket.org',
+    host: 'api.bitbucket.org',
 };
 
 function objToParam (obj = {}) {
@@ -34,16 +40,17 @@ function prequest (requestURL, authHeader) {
         },
     };
     return new Promise(function requestPromise (resolve, reject) {
-        request(opts, function requestCb (err, response, body) {
+        req(opts, function requestCb (err, response, body) {
             if (err) reject(err);
+            console.log(`${requestURL} returned ${response.statusCode}`);
             resolve({ response, body });
         });
     });
 }
 
-function makeURL (path, query = {}) {
+function makeURL (pathname, query = {}) {
     const newURL = { ...bitbucketURL };
-    newURL.pathname = path;
+    newURL.pathname = pathname;
     newURL.search = objToParam(query);
     return url.format(newURL);
 }
@@ -51,7 +58,8 @@ function makeURL (path, query = {}) {
 export default {
 
     getCommitsOf (repo) {
-        const requestURL = makeURL(`/api/2.0/repositories/fffunction/${repo}/commits/HEAD`);
+        console.log(`getting commits for ${repo}`)
+        const requestURL = makeURL(`/2.0/repositories/fffunction/${repo}/commits/`);
         const header = auth('GET', requestURL);
         return prequest(requestURL, header);
     },
@@ -60,7 +68,7 @@ export default {
         const query = {
             page,
         };
-        const requestURL = makeURL(`/api/2.0/repositories/fffunction`, query);
+        const requestURL = makeURL(`/2.0/repositories/fffunction`, query);
         const header = auth('GET', requestURL, query);
         return prequest(requestURL, header);
     },

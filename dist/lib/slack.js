@@ -16,9 +16,21 @@ var _request = require('request');
 
 var _request2 = _interopRequireDefault(_request);
 
+var _cachedRequest = require('cached-request');
+
+var _cachedRequest2 = _interopRequireDefault(_cachedRequest);
+
 var _url = require('url');
 
 var _url2 = _interopRequireDefault(_url);
+
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
+var req = (0, _cachedRequest2['default'])(_request2['default']);
+req.setCacheDirectory(_path2['default'].join(process.env.APP_ROOT, 'cache'));
+req.set('ttl', 60000); // 1 minute in ms
 
 var token = process.env.SLACK_API_KEY;
 var slackURL = {
@@ -38,7 +50,7 @@ function objToParam(obj) {
 
 function prequest(getUrl) {
     return new Promise(function requestPromise(resolve, reject) {
-        (0, _request2['default'])(getUrl, function requestCb(err, response, body) {
+        req(getUrl, function requestCb(err, response, body) {
             if (err) reject(err);
             resolve({ response: response, body: body });
         });

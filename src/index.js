@@ -18,7 +18,7 @@ const paths = {
         },
         bitbucket: {
             commits: bbCommits,
-        }
+        },
     },
 };
 

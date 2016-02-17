@@ -1,9 +1,11 @@
-[
-    "petercolesdc",
-    "bencoleman",
-    "urlsangel",
-    "bouncingdan",
-    "bendarby",
-    "danreeves",
-    "michellegale",
-]
+{
+    "users": [
+        "petercolesdc",
+        "bencoleman",
+        "urlsangel",
+        "bouncingdan",
+        "bendarby",
+        "danreeves",
+        "michellegale"
+    ]
+}

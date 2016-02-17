@@ -10,7 +10,7 @@ var _libBitbucketJs = require('../../lib/bitbucket.js');
 
 var _libBitbucketJs2 = _interopRequireDefault(_libBitbucketJs);
 
-var fffUsernames = require('../../data/bitbucket.json');
+var fffunctioneers = ['petercolesdc', 'bencoleman', 'urlsangel', 'bouncingdan', 'bendarby', 'danreeves', 'michellegale'];
 
 function getAllRepos() {
     var repos, getRepos;
@@ -23,10 +23,11 @@ function getAllRepos() {
                     return regeneratorRuntime.async(function getRepos$(context$2$0) {
                         while (1) switch (context$2$0.prev = context$2$0.next) {
                             case 0:
-                                context$2$0.next = 2;
+                                console.log(page);
+                                context$2$0.next = 3;
                                 return regeneratorRuntime.awrap(_libBitbucketJs2['default'].getRepos(page));
 
-                            case 2:
+                            case 3:
                                 repoResponse = context$2$0.sent;
                                 body = JSON.parse(repoResponse.body);
 
@@ -35,14 +36,14 @@ function getAllRepos() {
                                 }));
 
                                 if (!('next' in body)) {
-                                    context$2$0.next = 8;
+                                    context$2$0.next = 9;
                                     break;
                                 }
 
-                                context$2$0.next = 8;
+                                context$2$0.next = 9;
                                 return regeneratorRuntime.awrap(getRepos(page + 1));
 
-                            case 8:
+                            case 9:
                             case 'end':
                                 return context$2$0.stop();
                         }
@@ -54,9 +55,10 @@ function getAllRepos() {
                 return regeneratorRuntime.awrap(getRepos(1));
 
             case 4:
+                console.log(repos);
                 return context$1$0.abrupt('return', repos);
 
-            case 5:
+            case 6:
             case 'end':
                 return context$1$0.stop();
         }
@@ -97,7 +99,9 @@ exports['default'] = function getBitbucketCommitCount() {
                     return a;
                 }, []);
                 commitCount = allCommits.reduce(countUserCommits, {});
-                return context$1$0.abrupt('return', Object.keys(commitCount).map(function (user) {
+                return context$1$0.abrupt('return', Object.keys(commitCount).filter(function (user) {
+                    return fffunctioneers.includes(user);
+                }).map(function (user) {
                     return {
                         username: user,
                         commits: commitCount[user]
