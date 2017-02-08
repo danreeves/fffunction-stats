@@ -68,7 +68,7 @@ function prequest(requestURL, authHeader) {
     };
     return new Promise(function requestPromise(resolve, reject) {
         req(opts, function requestCb(err, response, body) {
-            if (err) reject(err);
+            if (err) console.log(requestURL + ' returned ' + err) && reject(err);
             console.log(requestURL + ' returned ' + response.statusCode);
             resolve({ response: response, body: body });
         });
